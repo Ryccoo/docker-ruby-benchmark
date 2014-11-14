@@ -4,7 +4,7 @@ MAINTAINER Richard Ludvigh "https://github.com/Ryccoo"
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
 RUN apt-get update
-RUN apt-get install -y curl
+RUN apt-get install -y curl git
 
 RUN \curl -sSL https://rvm.io/mpapis.asc | gpg --import -
 RUN \curl -L https://get.rvm.io | bash -s stable
