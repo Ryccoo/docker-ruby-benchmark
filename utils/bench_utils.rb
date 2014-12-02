@@ -9,6 +9,7 @@ class BenchUtils
     output = {}
     status = Open4::popen4(cmd) do |pid, stdin, stdout, stderr|
       output[:stdout] = stdout.read.strip
+      puts output[:stdout]
       output[:stderr] = stderr.read.strip
     end
 
