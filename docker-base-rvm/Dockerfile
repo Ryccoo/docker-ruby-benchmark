@@ -3,6 +3,8 @@ MAINTAINER Richard Ludvigh "https://github.com/Ryccoo"
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
+WORKDIR /home
+
 RUN apt-get update
 RUN apt-get install -y curl git
 
@@ -15,3 +17,6 @@ RUN echo "source /usr/local/rvm/scripts/rvm" > .bashrc
 
 RUN /bin/bash -l -c "rvm requirements"
 
+RUN git clone https://github.com/Ryccoo/docker-ruby-benchmark.git
+
+WORKDIR /home/docker-ruby-benchmark
