@@ -9,7 +9,7 @@ class DockerController
   def run_benchmark_game ruby_version, image_name
     BenchUtils.run_command <<-eos
 docker run -i -v ${PWD}/results:/results #{image_name} bash << COMMANDS
-cd ruby-benchmark-game && ruby run-benchmarks #{ruby_version} && cp results.csv /results/#{ruby_version}.csv
+cd benchmark-game && ruby run-benchmarks #{ruby_version} && cp results.csv /results/#{ruby_version}.csv
 COMMANDS
     eos
   end
