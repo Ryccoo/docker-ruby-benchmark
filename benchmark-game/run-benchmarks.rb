@@ -4,13 +4,13 @@ def rvm_versions
   `rvm list`.split(/\n/).reject {|version| version =~ /^rvm rubies/ || version =~ /^\s*$/}.collect {|version| version.match(/\s*([^\s]*)/)[1].strip }
 end
 
-def run_benchmarks
-  puts "Running Benchmarks"
-  7.times do
-    benchmarks.each do |benchmark|
+def run_benchmarks(bench = nil)
+  benchs = bench ? [bench] : benchmarks
+  1.times do # Temporary just run them once
+    benchs.each do |benchmark|
       next unless benchmark_needs_run?(benchmark)
       puts "time -p ruby #{benchmark} #{benchmark_args(benchmark)}"
-      stdout_str, stderr_str, status = Open3.capture3("time -p ruby #{benchmark} #{benchmark_args(benchmark)}")
+      stdout_str, stderr_str, status = Open3.capture3("bash -lc 'time -p ruby #{benchmark} #{benchmark_args(benchmark)}'")
       puts stderr_str if status.exitstatus > 0
       write_result(benchmark, stderr_str) if status.exitstatus == 0
     end
@@ -31,9 +31,12 @@ def benchmark_needs_run?(benchmark)
 end
 
 def write_result(benchmark, stats)
-  time = stats.split(/\n/)[0].gsub(/real\s*/, '')
+  puts stats
+  times = stats.split(/\n/)
+  time = times.find {|t| t =~ /real/ }
+  time = time ? time.gsub(/real\s*/, '') : nil
   File.open('./results.csv', 'a') do |f|
-    f.puts "#{ARGV[0]},#{benchmark},#{time},#{Time.now.to_s}"
+    f.puts "#{ARGV[0]},#{benchmark},#{time},#{Time.now.to_s},#{times}"
   end
 end
 
@@ -41,4 +44,4 @@ def benchmarks
   `ls benchmarks/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip }
 end
 
-run_benchmarks()
+run_benchmarks(ARGV[1])

@@ -19,6 +19,5 @@ RUN echo "source /usr/local/rvm/scripts/rvm" > .bashrc
 
 RUN /bin/bash -l -c "rvm requirements"
 
-RUN git clone https://github.com/Ryccoo/docker-ruby-benchmark.git
 
-WORKDIR /home/docker-ruby-benchmark
+WORKDIR /home
