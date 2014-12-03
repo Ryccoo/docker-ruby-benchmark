@@ -16,7 +16,7 @@ class BenchUtils
     end
 
     unless status.success?
-      puts status.red
+      puts status.to_s.red
       puts output[:stderr].red
       puts output[:stdout].blue
       raise CommandRunException, "Could not run command '#{cmd}'"

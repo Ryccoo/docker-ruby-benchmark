@@ -32,7 +32,7 @@ end
 
 def write_result(benchmark, stats)
   puts stats
-  times = stats.split(/\n/)
+  times = stats.split(/\n/).map {|t| t[0,50] }
   time = times.find {|t| t =~ /real/ }
   time = time ? time.gsub(/real\s*/, '') : nil
   File.open('./results.csv', 'a') do |f|
