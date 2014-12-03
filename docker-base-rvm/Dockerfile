@@ -3,6 +3,8 @@ MAINTAINER Richard Ludvigh "https://github.com/Ryccoo"
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
+ENV HOME /root
+ENV SHELL /bin/bash
 WORKDIR /home
 
 RUN apt-get update
