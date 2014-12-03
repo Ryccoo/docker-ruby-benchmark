@@ -6,18 +6,25 @@ class BaseController
 
   def test_images
     puts 'Testing images'
-    fail = false
+    success = true
     BaseConfig::AVAILABLE_DOCKER_IMAGES.each do |k,v|
       puts 'Downloading image - ' + v
       res = docker_controller.test_docker_runnable v
       if res[:stdout] == "Testing #{v}"
         puts res[:stdout] + ' - OK'
       else
-        fail = true
+        success = false
       end
     end
 
-    fail
+    success
+  end
+
+  def run_benchmark_game
+    puts 'Running benchmark game'
+    BaseConfig::AVAILABLE_DOCKER_IMAGES.each do |k,v|
+      docker_controller.run_benchmark_game(k, v)
+    end
   end
 
   private

@@ -2,9 +2,15 @@ require 'pry'
 require_relative 'utils/bench_utils'
 require_relative 'utils/base_controller'
 require_relative 'config/config'
+require 'pathname'
+
+PATH = Pathname.new(File.expand_path('..', __FILE__))
 
 base_controller = BaseController.new
 
-base_controller.test_images
+unless base_controller.test_images
+  puts 'Error testing images'
+  exit(1)
+end
 
-# sudo docker run ryccoo/docker-base-rvm:latest echo 'test'
+base_controller.run_benchmark_game
