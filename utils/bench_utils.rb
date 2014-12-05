@@ -1,5 +1,6 @@
 require 'open4'
 require 'colorize'
+require_relative '../config/config'
 
 class CommandRunException < Exception
 end
@@ -8,6 +9,7 @@ class BenchUtils
 
   def self.run_command cmd
     puts 'Running command: ' + "'#{cmd}'".green
+    STDOUT.flush
     output = {}
     status = Open4::popen4(cmd) do |pid, stdin, stdout, stderr|
       output[:stdout] = stdout.read.strip
@@ -26,7 +28,7 @@ class BenchUtils
   end
 
   def self.benchmark_games
-    `ls benchmark-game/benchmarks/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-]+\//, '') }
+    `ls #{BaseConfig.path.to_s}/benchmark-game/benchmarks/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-\/]+\//, '') }
   end
 
 end

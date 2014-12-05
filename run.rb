@@ -1,16 +1,31 @@
 require 'pry'
-require_relative 'utils/bench_utils'
-require_relative 'utils/base_controller'
 require_relative 'config/config'
 require 'pathname'
 
 PATH = Pathname.new(File.expand_path('..', __FILE__))
+BaseConfig.path = PATH
 
-base_controller = BaseController.new
+if ARGV.delete('pull')
+  unless BaseConfig::BASE_CONTROLLER.download_images
+    puts 'Error downloading images'
+    exit(1)
+  end
+  exit(0)
+end
 
-unless base_controller.test_images
+if ARGV.delete('clear')
+  unless BaseConfig::BASE_CONTROLLER.remove_containers
+    puts 'Error removing containers'
+    exit(1)
+  end
+  exit(0)
+end
+
+
+unless BaseConfig::BASE_CONTROLLER.test_images
   puts 'Error testing images'
   exit(1)
 end
 
-base_controller.run_benchmark_game
+
+BaseConfig::BENCHMARK_CONTROLLER.run_benchmark_games

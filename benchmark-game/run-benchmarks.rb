@@ -10,9 +10,18 @@ def run_benchmarks(bench = nil)
     benchs.each do |benchmark|
       next unless benchmark_needs_run?(benchmark)
       puts "time -p ruby #{benchmark} #{benchmark_args(benchmark)}"
-      stdout_str, stderr_str, status = Open3.capture3("bash -lc 'time -p ruby #{benchmark} #{benchmark_args(benchmark)}'")
-      puts stderr_str if status.exitstatus > 0
-      write_result(benchmark, stderr_str) if status.exitstatus == 0
+
+      if ENV['RUBY_VERSION'] =~ /jruby/
+        # jruby does not work well with capture3, so lets hack it other way
+        stdout_str = `bash -lc 'time -p ruby #{benchmark} #{benchmark_args(benchmark)}' 2>/tmp/stderr`
+        stderr_str = File.read('/tmp/stderr')
+        write_result(benchmark, stderr_str, stdout_str)
+      else
+        # other implementations should go along with this
+        stdout_str, stderr_str, status = Open3.capture3("bash -lc 'time -p ruby #{benchmark} #{benchmark_args(benchmark)}'")
+        puts stderr_str if status.exitstatus > 0
+        write_result(benchmark, stderr_str, stdout_str) if status.exitstatus == 0
+      end
     end
   end
 end
@@ -27,16 +36,18 @@ def benchmark_args(benchmark)
 end
 
 def benchmark_needs_run?(benchmark)
-  `cat results.csv | grep #{benchmark} | wc -l`.to_i < 7
+  `cat /tmp/results.csv | grep #{benchmark} | wc -l`.to_i < 7
 end
 
-def write_result(benchmark, stats)
+def write_result(benchmark, stats, stdout_str)
   puts stats
-  times = stats.split(/\n/).map {|t| t[0,50] }
+  stdout_str = stdout_str.ascii_only? ? stdout_str : ' '
+  stdout_str = stdout_str[0...100].gsub("\n", ' ')
+  times = stats.split(/\n/).take(20).map{|t| t[0...50] }
   time = times.find {|t| t =~ /real/ }
   time = time ? time.gsub(/real\s*/, '') : nil
-  File.open('./results.csv', 'a') do |f|
-    f.puts "#{ARGV[0]},#{benchmark},#{time},#{Time.now.to_s},#{times}"
+  File.open('/tmp/results.csv', 'a') do |f|
+    f.puts "#{ARGV[0]};#{benchmark};#{time};#{Time.now.to_s};#{times};#{stdout_str}; "
   end
 end
 

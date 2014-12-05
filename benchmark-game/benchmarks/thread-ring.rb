@@ -27,7 +27,11 @@ prev_thread = threads.last
 while true
    for thread in threads
       Thread.pass until prev_thread.stop?
-      thread.run
+      if thread.alive?
+        thread.run
+      else
+        exit
+      end
       prev_thread = thread
    end
 end
