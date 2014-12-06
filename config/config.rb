@@ -7,6 +7,8 @@ require_relative '../utils/formatter'
 
 class BaseConfig
   AVAILABLE_DOCKER_IMAGES = {
+    'ruby-2.1.5' => 'ryccoo/docker-mri-bench:2.1.5',
+    'ruby-2.1.4' => 'ryccoo/docker-mri-bench:2.1.4',
     'ruby-2.1.2' => 'ryccoo/docker-mri-bench:2.1.2',
     'ruby-2.1.1' => 'ryccoo/docker-mri-bench:2.1.1',
     'ruby-2.0.0' => 'ryccoo/docker-mri-bench:2.0.0',

@@ -19,5 +19,10 @@ RUN echo "source /usr/local/rvm/scripts/rvm" > .bashrc
 
 RUN /bin/bash -l -c "rvm requirements"
 
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+
+RUN /bin/bash -l -c "rvm get head"
 
 WORKDIR /home
