@@ -3,11 +3,21 @@ require_relative '../config/config'
 class DockerController
 
   def download_docker_image image_name
-    BenchUtils.run_command("docker pull #{image_name}")
+    BenchUtils.spawn_command("docker pull #{image_name}")
   end
 
   def test_docker_runnable image_name
+    download_docker_image(image_name) unless check_docker_exists(image_name)
     BenchUtils.run_command("docker run #{image_name} echo 'Testing #{image_name}'")
+  end
+
+  def check_docker_exists image_name
+    image, tag = image_name.split(':')
+    res = `docker images | grep '#{image}\\s\\+#{tag}' | wc -l`
+    if res.strip.to_i == 1
+      return true
+    end
+    return false
   end
 
   def test_ruby_version ruby_version, image_name

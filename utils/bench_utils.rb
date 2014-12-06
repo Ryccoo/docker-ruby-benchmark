@@ -27,6 +27,12 @@ class BenchUtils
     return output
   end
 
+  def self.spawn_command cmd
+    puts 'Spawning command: ' + "'#{cmd}'".green
+    pid = spawn cmd
+    Process::waitpid(pid)
+  end
+
   def self.benchmark_games
     `ls #{BaseConfig.path.to_s}/benchmark-game/benchmarks/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-\/]+\//, '') }
   end

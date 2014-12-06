@@ -21,7 +21,6 @@ if ARGV.delete('clear')
   exit(0)
 end
 
-
 unless BaseConfig::BASE_CONTROLLER.test_images
   puts 'Error testing images'
   exit(1)
@@ -29,3 +28,9 @@ end
 
 
 BaseConfig::BENCHMARK_CONTROLLER.run_benchmark_games
+
+# format results
+f = ResultsFormatter.new
+f.parse_available
+f.compact_results
+f.print_results

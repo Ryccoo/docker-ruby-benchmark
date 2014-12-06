@@ -38,9 +38,15 @@ class BaseController
     puts 'Removing containers'
 
     containers = BenchUtils.run_command 'docker ps -a | grep ryccoo | cut -f 1 -d " "'
+    count = containers[:stdout].split("\n").count
     containers = containers[:stdout].gsub("\n", ' ')
 
-    BenchUtils.run_command "docker rm #{containers}"
+    if count > 0
+      BenchUtils.run_command "docker rm #{containers}"
+    else
+      puts 'No containers found'
+      return true
+    end
   end
 
 end
