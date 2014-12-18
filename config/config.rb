@@ -22,10 +22,11 @@ class BaseConfig
     'rubinius-2.4.1' => 'ryccoo/docker-rbx-bench:2.4.1',
     'rubinius-2.4.0' => 'ryccoo/docker-rbx-bench:2.4.0',
     'rubinius-2.3.0' => 'ryccoo/docker-rbx-bench:2.3.0',
-    'rubinius-2.2.10' => 'ryccoo/docker-rbx-bench:2.2.10',
-    'rubinius-2.2.2' => 'ryccoo/docker-rbx-bench:2.2.2',
-    'rubinius-2.1.0' => 'ryccoo/docker-rbx-bench:2.1.0',
-    'rubinius-2.0.0' => 'ryccoo/docker-rbx-bench:2.0.0',
+    'rubinius-2.2.10' => 'ryccoo/docker-rbx-bench:2.2.10'
+    # Not working now
+    # 'rubinius-2.2.2' => 'ryccoo/docker-rbx-bench:2.2.2',
+    # 'rubinius-2.1.0' => 'ryccoo/docker-rbx-bench:2.1.0',
+    # 'rubinius-2.0.0' => 'ryccoo/docker-rbx-bench:2.0.0',
   }
 
 
