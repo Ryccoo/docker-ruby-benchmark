@@ -18,7 +18,14 @@ class BaseConfig
     'ruby-1.8.7' => 'ryccoo/docker-mri-bench:1.8.7',
     'ruby-1.8.6' => 'ryccoo/docker-mri-bench:1.8.6',
     'jruby-1.7.12' => 'ryccoo/docker-jruby-bench:1.7.12',
-    'rubinius-2.4.0' => 'ryccoo/docker-rbx-bench:2.4.0'
+    'jruby-1.6.8' => 'ryccoo/docker-jruby-bench:1.6.8',
+    'rubinius-2.4.1' => 'ryccoo/docker-rbx-bench:2.4.1',
+    'rubinius-2.4.0' => 'ryccoo/docker-rbx-bench:2.4.0',
+    'rubinius-2.3.0' => 'ryccoo/docker-rbx-bench:2.3.0',
+    'rubinius-2.2.10' => 'ryccoo/docker-rbx-bench:2.2.10',
+    'rubinius-2.2.2' => 'ryccoo/docker-rbx-bench:2.2.2',
+    'rubinius-2.1.0' => 'ryccoo/docker-rbx-bench:2.1.0',
+    'rubinius-2.0.0' => 'ryccoo/docker-rbx-bench:2.0.0',
   }
 
 
