@@ -21,13 +21,21 @@ if ARGV.delete('clear')
   exit(0)
 end
 
+if ARGV.delete('test')
+  unless BaseConfig::BASE_CONTROLLER.test_images
+    puts 'Error testing images'
+    exit(1)
+  end
+  exit(0)
+end
+
 unless BaseConfig::BASE_CONTROLLER.test_images
   puts 'Error testing images'
   exit(1)
 end
 
 
-BaseConfig::BENCHMARK_CONTROLLER.run_benchmark_games
+BaseConfig::BENCHMARK_CONTROLLER.run_benchmarks
 
 # format results
 f = ResultsFormatter.new

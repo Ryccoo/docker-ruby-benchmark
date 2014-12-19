@@ -33,8 +33,21 @@ class BenchUtils
     Process::waitpid(pid)
   end
 
-  def self.benchmark_games
-    `ls #{BaseConfig.path.to_s}/benchmark-game/benchmarks/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-\/]+\//, '') }
+  def self.benchmarks
+    res = {}
+    self.benchmark_folders.each do |folder|
+      items = `ls #{BaseConfig.path.to_s}/benchmarks/#{folder}/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-\/]+\//, '') }
+      res[folder] = items
+    end
+
+    res
+  end
+
+  def self.benchmark_folders
+    dirs = []
+    Dir.glob('benchmarks/*').select {|f| File.directory? f}.map{|i| i.slice!('benchmarks/'); dirs << i }
+
+    dirs
   end
 
 end

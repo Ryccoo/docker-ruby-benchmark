@@ -23,7 +23,7 @@ class DockerController
   def test_ruby_version ruby_version, image_name
     puts "Testing ruby version: [Should be: #{ruby_version}]".blue
     res = BenchUtils.run_command <<-eos
-docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmark-game:/benchmark-game #{image_name} bash -l << COMMANDS
+docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmarks:/benchmarks #{image_name} bash -l << COMMANDS
 ruby -v
 COMMANDS
     eos
@@ -31,14 +31,14 @@ COMMANDS
     res
   end
 
-  def run_benchmark_game image_name, game_with_args
+  def run_benchmark image_name, folder, bench_with_args
     puts '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '.blue
-    puts "RUNNING BENCHMARK '#{game_with_args}'".green
+    puts "RUNNING BENCHMARK '#{bench_with_args}'".green
     puts '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '.blue
     res = BenchUtils.run_command <<-eos
-docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmark-game:/benchmark-game #{image_name} bash -l << COMMANDS
-cd /benchmark-game/benchmarks && \
-bash -lc 'time -p ruby #{game_with_args}' >/tmp/stdout 2>/tmp/stderr && \
+docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmarks:/benchmarks #{image_name} bash -l << COMMANDS
+cd /benchmarks/#{folder} && \
+bash -lc "TIMEFORMAT='real %3R'; time ruby #{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
 cat /tmp/stderr > /results/stderr && \
 cat /tmp/stdout > /results/stdout && \
 chmod 666 /results/std*

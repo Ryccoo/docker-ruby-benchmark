@@ -34,7 +34,7 @@ class BaseConfig
   BENCHMARK_CONTROLLER = BenchmarkController.new
   BASE_CONTROLLER = BaseController.new
 
-  REPETITIONS = 10
+  REPETITIONS = 1
 
   def self.path=(p)
     @@path = p

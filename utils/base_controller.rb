@@ -42,7 +42,7 @@ class BaseController
     containers = containers[:stdout].gsub("\n", ' ')
 
     if count > 0
-      BenchUtils.run_command "docker rm #{containers}"
+      BenchUtils.spawn_command "docker rm #{containers}"
     else
       puts 'No containers found'
       return true
