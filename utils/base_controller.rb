@@ -20,7 +20,7 @@ class BaseController
         puts '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '.blue
         puts 'Testing images - ' + image_name
 
-        test_cmd = %{bash -c "gcc -v && ruby -e 'puts RUBY_DESCRIPTION, RbConfig::CONFIG[%{cflags}]'"}
+        test_cmd = %{bash -c "gcc -v && ruby -rrbconfig -e 'puts RUBY_DESCRIPTION, RbConfig::CONFIG[%{cflags}]'"}
         res = BaseConfig::DOCKER_CONTROLLER.test_docker_runnable image_name, test_cmd
 
         # check gcc version
