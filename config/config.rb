@@ -36,6 +36,30 @@ class BaseConfig
       'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:2.1.0',
       'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:2.1.0',
     },
+    'ruby-2.0.0' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:2.0.0',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:2.0.0',
+    },
+    'ruby-1.9.3' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:1.9.3',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:1.9.3',
+    },
+    'ruby-1.9.2' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:1.9.2',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:1.9.2',
+    },
+    'ruby-1.9.1' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:1.9.1',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:1.9.1',
+    },
+    'ruby-1.8.7' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:1.8.7',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:1.8.7',
+    },
+    'ruby-1.8.6' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:1.8.6',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:1.8.6',
+    },
     # 'ruby-2.1.4' => 'ryccoo/docker-mri-bench:2.1.4',
     # 'ruby-2.1.2' => 'ryccoo/docker-mri-bench:2.1.2',
     # 'ruby-2.1.1' => 'ryccoo/docker-mri-bench:2.1.1',
