@@ -2,39 +2,44 @@ require_relative '../config/config'
 
 class BenchmarkController
   def run_benchmarks(options = {})
-    default_repeats = options[:repeats] || BaseConfig::REPETITIONS
+    default_repeats = (options[:repeats] || BaseConfig::REPETITIONS).to_i
 
-    BaseConfig::AVAILABLE_DOCKER_IMAGES.each do |k,v|
-      BaseConfig::DOCKER_CONTROLLER.test_ruby_version(k,v)
-      puts "Running benchmark game in image #{v} with ruby -v #{k}".green
+    default_repeats.times do
+
       BenchUtils.benchmarks.each do |folder_name, script_names|
         script_names.each do |script_name|
-          repeats = check_missing_repeats(folder_name, script_name, k, default_repeats)
-          repeats.times do
-            run_benchmark(folder_name, script_name, k, v)
+
+          BaseConfig::AVAILABLE_DOCKER_IMAGES.each do |ruby_version, gccs|
+
+            gccs.each do |gcc_v, image_name|
+              missing = check_missing_repeats(folder_name, script_name, ruby_version, gcc_v, default_repeats)
+              next if missing <= 0
+              run_benchmark(folder_name, script_name, ruby_version, gcc_v, image_name)
+              BaseConfig::BASE_CONTROLLER.remove_containers
+            end
+
           end
-          BaseConfig::BASE_CONTROLLER.remove_containers
         end
       end
     end
   end
 
-  def check_missing_repeats(folder_name, script_name, ruby_version, default)
+  def check_missing_repeats(folder_name, script_name, ruby_version, gcc_version, default)
     file = BaseConfig.path.join('results', "#{ruby_version}.csv")
     if FileTest.exist? file
       data = File.read file
-      found = data.lines.select {|l| l =~ /#{folder_name}\/#{script_name}/}.count
+      found = data.lines.select {|l| l =~ /#{folder_name}\/#{script_name}/ && l =~ /;#{gcc_version};/}.count
       return (default - found)
     else
       return default
     end
   end
 
-  def run_benchmark(folder_name, ruby_script_name, ruby_version, image_name)
+  def run_benchmark(folder_name, ruby_script_name, ruby_version, gcc_version, image_name)
     args = benchmark_args(BaseConfig.path.join("benchmarks/#{folder_name}/"), ruby_script_name)
     runnable_name = "#{ruby_script_name} #{args}"
     res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
-    write_stats(ruby_version, folder_name, runnable_name, stderr, stdout)
+    write_stats(ruby_version, gcc_version, folder_name, runnable_name, stderr, stdout)
   end
 
   def benchmark_args(path, benchmark)
@@ -48,7 +53,7 @@ class BenchmarkController
 
   private
 
-  def write_stats(ruby_version, folder_name, benchmark, stats, stdout_str)
+  def write_stats(ruby_version, gcc_version, folder_name, benchmark, stats, stdout_str)
     puts stats
     stdout_str = stdout_str.ascii_only? ? stdout_str : ' '
     stdout_str = stdout_str[0...100].gsub("\n", ' ').gsub(';', ',') # we get rid of newlines and ';'
@@ -57,7 +62,7 @@ class BenchmarkController
     time = time ? time.gsub(/real\s*/, '') : nil
     basename = benchmark.gsub(/\.rb.*/, '')
     File.open(BaseConfig.path.join('results', "#{ruby_version}.csv"), 'a') do |f|
-      f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{basename};#{time};#{Time.now.to_s};#{times};#{stdout_str}; "
+      f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{times};#{stdout_str}; "
     end
 
     remove_tmp_files

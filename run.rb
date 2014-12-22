@@ -21,6 +21,14 @@ if ARGV.delete('clear')
   exit(0)
 end
 
+if ARGV.delete('publish')
+  publisher = BenchPublisher.new
+  if publisher.enabled?
+    publisher.publish_all
+  end
+  exit(0)
+end
+
 if ARGV.delete('test')
   unless BaseConfig::BASE_CONTROLLER.test_images
     puts 'Error testing images'
@@ -35,10 +43,4 @@ unless BaseConfig::BASE_CONTROLLER.test_images
 end
 
 
-BaseConfig::BENCHMARK_CONTROLLER.run_benchmarks
-
-# format results
-f = ResultsFormatter.new
-f.parse_available
-f.compact_results
-f.print_results
+BaseConfig::BENCHMARK_CONTROLLER.run_benchmarks(repeats: ENV['BENCH_REPEATS'])

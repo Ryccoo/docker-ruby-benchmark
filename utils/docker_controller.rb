@@ -6,9 +6,9 @@ class DockerController
     BenchUtils.spawn_command("docker pull #{image_name}")
   end
 
-  def test_docker_runnable image_name
+  def test_docker_runnable image_name, cmd
     download_docker_image(image_name) unless check_docker_exists(image_name)
-    BenchUtils.run_command("docker run #{image_name} echo 'Testing #{image_name}'")
+    BenchUtils.run_command("docker run #{image_name} #{cmd}")
   end
 
   def check_docker_exists image_name
