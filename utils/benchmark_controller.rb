@@ -36,10 +36,16 @@ class BenchmarkController
   end
 
   def run_benchmark(folder_name, ruby_script_name, ruby_version, gcc_version, image_name)
+    remove_tmp_files
+
     args = benchmark_args(BaseConfig.path.join("benchmarks/#{folder_name}/"), ruby_script_name)
     runnable_name = "#{ruby_script_name} #{args}"
-    res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
-    write_stats(ruby_version, gcc_version, folder_name, runnable_name, stderr, stdout)
+    begin
+      res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
+      write_stats(ruby_version, gcc_version, folder_name, runnable_name, stderr, stdout, false)
+    rescue CommandRunException => e
+      write_stats(ruby_version, gcc_version, folder_name, runnable_name, stderr, stdout, true)
+    end
   end
 
   def benchmark_args(path, benchmark)
@@ -53,7 +59,7 @@ class BenchmarkController
 
   private
 
-  def write_stats(ruby_version, gcc_version, folder_name, benchmark, stats, stdout_str)
+  def write_stats(ruby_version, gcc_version, folder_name, benchmark, stats, stdout_str, failed = false)
     puts stats
     stdout_str = stdout_str.ascii_only? ? stdout_str : ' '
     stdout_str = stdout_str[0...100].gsub("\n", ' ').gsub(';', ',') # we get rid of newlines and ';'
@@ -62,15 +68,19 @@ class BenchmarkController
     time = time ? time.gsub(/real\s*/, '') : nil
     basename = benchmark.gsub(/\.rb.*/, '')
     File.open(BaseConfig.path.join('results', "#{ruby_version}.csv"), 'a') do |f|
-      f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{times};#{stdout_str}; "
+      if failed
+        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};FAILED;#{Time.now.to_s};#{times};#{stdout_str}; "
+      else
+        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{times};#{stdout_str}; "
+      end
     end
 
     remove_tmp_files
   end
 
   def remove_tmp_files
-    File.delete BaseConfig.path.join('results','stdout')
     File.delete BaseConfig.path.join('results','stderr')
+    File.delete BaseConfig.path.join('results','stdout')
   rescue
     nil
   end

@@ -39,7 +39,6 @@ end
 
 unless BaseConfig::BASE_CONTROLLER.test_images
   puts 'Error testing images'
-  exit(1)
 end
 
 

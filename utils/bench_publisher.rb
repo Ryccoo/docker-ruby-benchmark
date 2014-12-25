@@ -43,12 +43,13 @@ class BenchPublisher
     time = data[4]
     run_at = Time.parse(data[5])
 
-
-    http = Net::HTTP.new(@uri.host, @port || @uri.port)
-    request = Net::HTTP::Post.new(PAGE)
-    request.set_form_data({secret_token: @key, gcc_version: gcc_version, executable: benchmark, name: name, ruby: version, time: time, run_at: run_at})
-    response = http.request(request)
-    puts response.body
+    unless time == 'FAILED'
+      http = Net::HTTP.new(@uri.host, @port || @uri.port)
+      request = Net::HTTP::Post.new(PAGE)
+      request.set_form_data({secret_token: @key, gcc_version: gcc_version, executable: benchmark, name: name, ruby: version, time: time, run_at: run_at})
+      response = http.request(request)
+      puts response.body
+    end
   end
 
   def file_lines(version)
