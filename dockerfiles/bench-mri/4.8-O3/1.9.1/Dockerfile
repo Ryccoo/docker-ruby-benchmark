@@ -8,8 +8,10 @@ RUN curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION
     		| tar -xjC /usr/src/ruby
 
 RUN cd /usr/src/ruby/ruby-$RUBY_VERSION \
+    && apt-get remove -y libssl-dev \
     && autoconf \
     && ./configure --disable-install-doc \
     && make \
     && apt-get purge -y --auto-remove bison ruby \
-    && make install
+    && make install \
+    && gem install newrelic_rpm -v 3.9.8.273
