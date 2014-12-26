@@ -13,5 +13,5 @@ RUN cd /usr/src/ruby/ruby-$RUBY_VERSION \
     && ./configure --disable-install-doc \
     && make \
     && apt-get purge -y --auto-remove bison ruby \
-    && make install \
-    && gem install newrelic_rpm -v 3.9.8.273
+    && make install
+
