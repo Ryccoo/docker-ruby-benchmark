@@ -17,7 +17,7 @@ class BaseController
     success = true
     BaseConfig::AVAILABLE_DOCKER_IMAGES.each do |k,gccs|
       gccs.each do |gcc_v, image_name|
-        puts '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '.blue
+        puts BaseConfig::SEPARATOR.blue
         puts 'Testing images - ' + image_name
 
         test_cmd = %{bash -c "gcc -v && ruby -v && ruby -rrbconfig -e 'puts RbConfig::CONFIG[%{cflags}]'"}
@@ -50,13 +50,14 @@ class BaseController
       end
     end
 
-    puts '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '.blue
+    puts BaseConfig::SEPARATOR.blue
     puts "CHECK - #{success}"
-    puts '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '.blue
+    puts BaseConfig::SEPARATOR.blue
     success
   end
 
   def remove_containers
+    puts BaseConfig::SEPARATOR.blue
     puts 'Removing containers'
 
     containers = BenchUtils.run_command 'docker ps -a | grep ryccoo | cut -f 1 -d " "'

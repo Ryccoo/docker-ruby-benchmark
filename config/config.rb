@@ -88,6 +88,8 @@ class BaseConfig
 
   REPETITIONS = 10
 
+  SEPARATOR = '- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - '
+
 
 
   def self.path=(p)

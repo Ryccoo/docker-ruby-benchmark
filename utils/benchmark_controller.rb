@@ -41,7 +41,11 @@ class BenchmarkController
     args = benchmark_args(BaseConfig.path.join("benchmarks/#{folder_name}/"), ruby_script_name)
     runnable_name = "#{ruby_script_name} #{args}"
     begin
-      res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
+      if ENV['BENCH_MEMORY'] == 'true'
+        res = BaseConfig::DOCKER_CONTROLLER.run_memory_benchmark(image_name, folder_name, runnable_name)
+      else
+        res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
+      end
       write_stats(ruby_version, gcc_version, folder_name, runnable_name, stderr, stdout, false)
     rescue CommandRunException => e
       write_stats(ruby_version, gcc_version, folder_name, runnable_name, stderr, stdout, true)
@@ -64,14 +68,16 @@ class BenchmarkController
     stdout_str = stdout_str.ascii_only? ? stdout_str : ' '
     stdout_str = stdout_str[0...100].gsub("\n", ' ').gsub(';', ',') # we get rid of newlines and ';'
     times = stats.split(/\n/).last(20).map{|t| t[0...50] }
+    memory = times.find {|t| t =~ /memory/ }
+    memory = memory ? memory.gsub(/memory\s*/, '') : nil
     time = times.find {|t| t =~ /real/ }
     time = time ? time.gsub(/real\s*/, '') : nil
     basename = benchmark.gsub(/\.rb.*/, '')
     File.open(BaseConfig.path.join('results', "#{ruby_version}.csv"), 'a') do |f|
       if failed
-        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};FAILED;#{Time.now.to_s};#{times};#{stdout_str}; "
+        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};FAILED;#{Time.now.to_s};#{memory};#{times};#{stdout_str}; "
       else
-        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{times};#{stdout_str}; "
+        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{memory};#{times};#{stdout_str}; "
       end
     end
 

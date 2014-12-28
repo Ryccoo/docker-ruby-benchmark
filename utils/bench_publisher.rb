@@ -14,6 +14,8 @@ class BenchPublisher
     if @site && @key
       @uri = URI.parse(@site)
     end
+
+    @published_lines = 0
   end
 
   def enabled?
@@ -42,13 +44,24 @@ class BenchPublisher
     name = data[3]
     time = data[4]
     run_at = Time.parse(data[5])
+    memory = data[6]
 
     unless time == 'FAILED'
       http = Net::HTTP.new(@uri.host, @port || @uri.port)
       request = Net::HTTP::Post.new(PAGE)
-      request.set_form_data({secret_token: @key, gcc_version: gcc_version, executable: benchmark, name: name, ruby: version, time: time, run_at: run_at})
+      request.set_form_data({
+                              secret_token: @key,
+                              gcc_version: gcc_version,
+                              executable: benchmark,
+                              name: name,
+                              ruby: version,
+                              time: time,
+                              run_at: run_at,
+                              memory: memory
+                            })
       response = http.request(request)
-      puts response.body
+      @published_lines += 1
+      puts "#{@published_lines}: #{response.body}"
     end
   end
 

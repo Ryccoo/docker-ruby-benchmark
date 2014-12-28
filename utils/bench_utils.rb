@@ -37,9 +37,9 @@ class BenchUtils
     res = {}
     self.benchmark_folders.each do |folder|
       items = `ls #{BaseConfig.path.to_s}/benchmarks/#{folder}/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-\/]+\//, '') }
+      items = items.delete_if {|i| i =~ /\Abenchstub_/ }
       res[folder] = items
     end
-
     res
   end
 
