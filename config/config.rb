@@ -6,12 +6,17 @@ require_relative '../utils/benchmark_controller'
 require_relative '../utils/bench_utils'
 require_relative '../utils/formatter'
 require_relative '../utils/bench_publisher'
+require_relative '../utils/bench_timeout'
 
 # load .env file
 Dotenv.load
 
 class BaseConfig
   AVAILABLE_DOCKER_IMAGES = {
+    'ruby-2.2.0' => {
+      'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:2.2.0',
+      'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:2.2.0',
+    },
     'ruby-2.1.5' => {
       'GCC 4.9 -O2' => 'ryccoo/mri-gcc-4.9-o2:2.1.5',
       'GCC 4.8 -O3' => 'ryccoo/mri-gcc-4.8-o3:2.1.5',
