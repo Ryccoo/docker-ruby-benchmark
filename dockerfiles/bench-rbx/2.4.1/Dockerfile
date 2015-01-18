@@ -1,4 +1,4 @@
-FROM ryccoo/docker-base-rvm:latest
+FROM ryccoo/rvm:latest
 MAINTAINER Richard Ludvigh "https://github.com/Ryccoo
 
 # WELL THERE ARE STILL TROUBLES INSTALLING RBX THROUGH RVM, SO LETS JUST DO IT MANUALLY
