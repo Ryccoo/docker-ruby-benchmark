@@ -1,4 +1,4 @@
-FROM ryccoo/docker-base-rvm:latest
+FROM ryccoo/rvm:latest
 MAINTAINER Richard Ludvigh "https://github.com/Ryccoo"
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
