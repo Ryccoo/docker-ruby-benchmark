@@ -2,7 +2,7 @@ FROM ryccoo/clang:3.5
 MAINTAINER Richard Ludvigh "https://github.com/Ryccoo"
 
 ENV RUBY_MAJOR 2.0
-ENV RUBY_VERSION 2.0.0
+ENV RUBY_VERSION 2.0.0-p598
 
 RUN curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION.tar.bz2" \
     		| tar -xjC /usr/src/ruby
