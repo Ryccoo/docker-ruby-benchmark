@@ -10,8 +10,8 @@ RUN curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION
 RUN cd /usr/src/ruby/ruby-$RUBY_VERSION \
     && apt-get remove -y libssl-dev \
     && autoconf \
-    && export CFLAGS="-march=native -O2" \
-    && ./configure optflags='-march=native -O2' --disable-install-doc \
+    && export CFLAGS="-O2 -fno-fast-math" \
+    && ./configure optflags='-O2 -fno-fast-math' --disable-install-doc \
     && make \
     && apt-get purge -y --auto-remove bison ruby \
     && make install

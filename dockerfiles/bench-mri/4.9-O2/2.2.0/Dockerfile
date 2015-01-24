@@ -11,8 +11,8 @@ RUN apt-get install -y libffi-dev
 
 RUN cd /usr/src/ruby/ruby-$RUBY_VERSION \
     && autoconf \
-    && export CFLAGS="-march=native -O2" \
-    && ./configure optflags='-march=native -O2' --disable-install-doc \
+    && export CFLAGS="-O2 -fno-fast-math" \
+    && ./configure optflags='-O2 -fno-fast-math' --disable-install-doc \
     && make \
     && apt-get purge -y --auto-remove bison ruby \
     && make install
