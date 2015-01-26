@@ -9,9 +9,8 @@ RUN curl -SL "http://cache.ruby-lang.org/pub/ruby/$RUBY_MAJOR/ruby-$RUBY_VERSION
 
 RUN cd /usr/src/ruby/ruby-$RUBY_VERSION \
     && apt-get remove -y libssl-dev \
-    && apt-get remove -y libssl-dev \
     && autoconf \
-    && ./configure --disable-install-doc \
+    && ./configure optflags='-O3' --disable-install-doc \
     && make \
     && apt-get purge -y --auto-remove bison ruby \
     && make install
