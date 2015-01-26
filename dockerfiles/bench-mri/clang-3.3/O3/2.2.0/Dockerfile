@@ -1,4 +1,4 @@
-FROM ryccoo/clang:3.4
+FROM ryccoo/clang:3.3
 MAINTAINER Richard Ludvigh "https://github.com/Ryccoo"
 
 ENV RUBY_MAJOR 2.2
