@@ -115,6 +115,10 @@ if options[:publish]
   publisher = BenchPublisher.new
   if publisher.enabled?
     publisher.publish_all
+  else
+    $stderr.puts "Publishing is not available, make sure BENCH_SECRET and \
+BENCH_SITE environment veriable are correctly set. Use --help to display help."
+    exit(1)
   end
   exit(0)
 end
