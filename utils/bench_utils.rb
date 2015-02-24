@@ -8,12 +8,12 @@ end
 class BenchUtils
 
   def self.run_command cmd
-    puts 'Running command: ' + "'#{cmd}'".green
+    puts 'Running command: ' + "'#{cmd}'".green if ENV['VERBOSE']
     STDOUT.flush
     output = {}
     status = Open4::popen4(cmd) do |pid, stdin, stdout, stderr|
       output[:stdout] = stdout.read.strip
-      puts output[:stdout]
+      puts output[:stdout] if ENV['VERBOSE']
       output[:stderr] = stderr.read.strip
     end
 
@@ -28,18 +28,31 @@ class BenchUtils
   end
 
   def self.spawn_command cmd
-    puts 'Spawning command: ' + "'#{cmd}'".green
+    puts 'Spawning command: ' + "'#{cmd}'".green if ENV['VERBOSE']
     pid = spawn cmd
     Process::waitpid(pid)
   end
 
   def self.benchmarks
     res = {}
+
+    if ENV['BENCH_FILE']
+      if File.exist?(BaseConfig.path.join('benchmarks', ENV["BENCH_FILE"]))
+        f, r = ENV['BENCH_FILE'].split("/", 2)
+        res[f] = [r]
+        return res
+      else
+        $stderr.puts("File #{ENV['BENCH_FILE']} not found")
+        exit 1
+      end
+    end
+
     self.benchmark_folders.each do |folder|
       items = `ls #{BaseConfig.path.to_s}/benchmarks/#{folder}/*.rb`.split(/\n/).collect {|benchmark| benchmark.strip.sub(/^[a-zA-Z\-\/]+\//, '') }
       items = items.delete_if {|i| i =~ /\Abenchstub_/ }
       res[folder] = items
     end
+
     res
   end
 

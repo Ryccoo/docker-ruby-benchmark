@@ -16,6 +16,9 @@ class BenchPublisher
     end
 
     @published_lines = 0
+    @total_lines = 0
+
+    total_count
   end
 
   def enabled?
@@ -45,8 +48,9 @@ class BenchPublisher
     time = data[4]
     run_at = Time.parse(data[5])
     memory = data[6]
+    total_memory = data[7]
 
-    unless time == 'FAILED'
+    unless time == 'FAILED' || time == 'TIMEOUT'
       http = Net::HTTP.new(@uri.host, @port || @uri.port)
       request = Net::HTTP::Post.new(PAGE)
       request.set_form_data({
@@ -57,11 +61,12 @@ class BenchPublisher
                               ruby: version,
                               time: time,
                               run_at: run_at,
-                              memory: memory
+                              memory: memory,
+                              total_memory: total_memory
                             })
       response = http.request(request)
       @published_lines += 1
-      puts "#{@published_lines}: #{response.body}"
+      puts "#{@published_lines} / #{@total_lines}: #{response.body}"
     end
   end
 
@@ -71,6 +76,13 @@ class BenchPublisher
     return data
   rescue
     return []
+  end
+
+  def total_count
+    BaseConfig::AVAILABLE_DOCKER_IMAGES.keys.each do |k|
+      lines = file_lines(k)
+      @total_lines += lines.count
+    end
   end
 
 end

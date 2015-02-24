@@ -32,41 +32,24 @@ COMMANDS
   end
 
   def run_benchmark image_name, folder, bench_with_args
-    puts BaseConfig::SEPARATOR.blue
-    puts "RUNNING BENCHMARK '#{bench_with_args}'".green
-    puts BaseConfig::SEPARATOR.blue
+    timeout = BenchTimeout.new()
+
+    no_input_args = bench_with_args.gsub("<", '')
     res = BenchUtils.run_command <<-eos
 docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmarks:/benchmarks #{image_name} bash -l << COMMANDS
-cd /benchmarks/#{folder} && \
-bash -lc "TIMEFORMAT='real %3R'; time ruby #{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
-cat /tmp/stderr > /results/stderr && \
-cat /tmp/stdout > /results/stdout && \
-chmod 666 /results/std*
-COMMANDS
-    eos
-    puts BaseConfig::SEPARATOR.blue
-
-    res
-  end
-
-  def run_memory_benchmark image_name, folder, bench_with_args
-    bench_with_args.gsub!("<", '')
-    puts BaseConfig::SEPARATOR.blue
-    puts "RUNNING BENCHMARK (WITH MEMORY MEASUREMENT) '#{bench_with_args}'".green
-    puts BaseConfig::SEPARATOR.blue
-    res = BenchUtils.run_command <<-eos
-docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmarks:/benchmarks #{image_name} bash -l << COMMANDS
+cd /benchmarks && rm ruby-official/benchstub_* ; \
 cd /benchmarks && \
-bash -lc "ruby stub_code.rb #{folder} #{bench_with_args}" && \
-bash -lc "ruby benchmark.rb #{folder} #{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
+bash -lc "ruby stub_code.rb #{folder} #{no_input_args}" && \
+cd #{folder} && \
+bash -lc "ruby benchstub_#{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
 cat /tmp/stderr > /results/stderr && \
 cat /tmp/stdout > /results/stdout && \
 chmod 666 /results/std*
 COMMANDS
     eos
-    puts BaseConfig::SEPARATOR.blue
-
     res
+  ensure
+    timeout.stop
   end
 
 end
