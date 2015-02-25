@@ -15,13 +15,13 @@ require 'pp'
 require 'optparse'
 
 
-# namiesto options pouzivat commands bez pomlciek, popripade premenovat na neco ine ako run.rb
+# namiesto options pouzivat commands bez pomlciek, popripade premenovat na neco ine ako rubyfy.rb
 class Parser
   def self.parse(arguments)
     options = {}
 
     opt_parser = OptionParser.new do |opts|
-      opts.banner = "Usage: run.rb [options]"
+      opts.banner = "Usage: rubyfy.rb [options]"
 
       opts.on("-d", "--pull", "Pull all docker images") do |n|
         options[:pull] = n
@@ -51,14 +51,14 @@ class Parser
         explanation = <<-EOE
 \033[1mENVIRONMENT SETTINGS\033[0m
   This benchmark suite uses ENV gem that allows you to store all your environment settings into file.
-  This file is located in root of this application (where the file run.rb is located) and needs to be named "\033[1m.env\033[0m".
+  This file is located in root of this application (where the file rubyfy.rb is located) and needs to be named "\033[1m.env\033[0m".
 
   \033[1mEnvironment settings for benchmarking\033[0m
 
     BENCH_REPEATS=x                  Repeat each benchmark x times. Default value is 10.
 
     BENCH_FILE=name                  Runs only selected benchmark. Use full path from benchmarks folder.
-                                      Example: \033[1mBENCH_FILE="ruby-official/bm_vm3_gc.rb" ./run.rb --run\033[0m will
+                                      Example: \033[1mBENCH_FILE="ruby-official/bm_vm3_gc.rb" ./rubyfy.rb --run\033[0m will
                                       run benchmark suite only for benchmark bm_vm3_gc.rb located in benchmarks/ruby-official
                                       folder.
 
@@ -71,11 +71,11 @@ class Parser
                                      to be set at RubyFy.Me rails app.
 
     BENCH_SITE=site                  URL (WITHOUT PORT) of rails app displaying stored results.
-                                      Examples: \033[1mBENCH_SITE="localhost" BENCH_PORT=3000 ./run.rb --publish\033[0m
-                                                \033[1mBENCH_SITE="http://rubyfy.me" ./run.rb --publish\033[0m
+                                      Examples: \033[1mBENCH_SITE="localhost" BENCH_PORT=3000 ./rubyfy.rb --publish\033[0m
+                                                \033[1mBENCH_SITE="http://rubyfy.me" ./rubyfy.rb --publish\033[0m
 
     BENCH_PORT=x                    Port of rails app displaying stored results.
-                                      Example: \033[1mBENCH_SITE=localhost BENCH_PORT=3000 ./run.rb --publish\033[0m will
+                                      Example: \033[1mBENCH_SITE=localhost BENCH_PORT=3000 ./rubyfy.rb --publish\033[0m will
                                       push results to localhost on port 3000.
                                       IMPORTANT: USE THIS ONLY WHEN PORT IS DIFFERENT THAN 80
         EOE
