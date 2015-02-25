@@ -15,6 +15,7 @@ require 'pp'
 require 'optparse'
 
 
+# namiesto options pouzivat commands bez pomlciek, popripade premenovat na neco ine ako run.rb
 class Parser
   def self.parse(arguments)
     options = {}
@@ -50,7 +51,7 @@ class Parser
         explanation = <<-EOE
 \033[1mENVIRONMENT SETTINGS\033[0m
   This benchmark suite uses ENV gem that allows you to store all your environment settings into file.
-  This file is located in root of this application (where the file run.rb is located) and need to be named "\033[1m.env\033[0m"
+  This file is located in root of this application (where the file run.rb is located) and needs to be named "\033[1m.env\033[0m".
 
   \033[1mEnvironment settings for benchmarking\033[0m
 
