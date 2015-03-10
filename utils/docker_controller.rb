@@ -59,7 +59,7 @@ COMMANDS
 docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmarks:/benchmarks #{image_name} bash -l << COMMANDS
 cd /benchmarks && \
 cd #{folder} && \
-bash -lc "ruby -J-Djruby.compile.mode=OFF #{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
+bash -lc "ruby #{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
 cat /tmp/stderr > /results/stderr && \
 cat /tmp/stdout > /results/stdout && \
 chmod 666 /results/std*
