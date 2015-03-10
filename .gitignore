@@ -1,4 +1,5 @@
 *.swp
 .idea
 .rvmrc
-/results/*.csv
+./results/*.csv
+./results
