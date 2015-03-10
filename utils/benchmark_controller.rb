@@ -55,7 +55,11 @@ class BenchmarkController
     puts BaseConfig::SEPARATOR.blue
     puts "Running benchmark #{ruby_script_name} on #{ruby_version}".green
     begin
-      res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
+      if folder_name == 'custom'
+        res = BaseConfig::DOCKER_CONTROLLER.run_custom_benchmark(image_name, folder_name, runnable_name)
+      else
+        res = BaseConfig::DOCKER_CONTROLLER.run_benchmark(image_name, folder_name, runnable_name)
+      end
       write_stats(ruby_version, gcc_version, folder_name, ruby_script_name, runnable_name, stderr, stdout, false)
     rescue CommandRunException => e
       write_stats(ruby_version, gcc_version, folder_name, ruby_script_name, runnable_name, stderr, stdout, true)
@@ -80,8 +84,10 @@ class BenchmarkController
     key = [folder_name, benchmark_without_args, ruby_version, gcc_version]
 
     puts stderr_str
+    stdout_str ||= ''
     stdout_str = stdout_str.ascii_only? ? stdout_str : ' '
-    stdout_str = stdout_str[0...100].gsub("\n", ' ').gsub(';', ',') # we get rid of newlines and ';'
+    stdout_str = folder_name == 'custom' ? stdout_str : stdout_str[0..100]
+    stdout_str = stdout_str.gsub("\n", "\\n").gsub(';', ',') # we get rid of newlines and ';'
 
     times = stderr_str.split(/\n/).last(20).map{|t| t[0...50] }
 
@@ -96,14 +102,17 @@ class BenchmarkController
 
     basename = benchmark.gsub(/\.rb.*/, '')
 
+    stderr_str ||= ''
+    stderr_str = folder_name == 'custom' ? stderr_str : stderr_str[0.100]
+    stderr_str = stderr_str.gsub("\n", "\\n").gsub(";", ",")
+
     File.open(BaseConfig.path.join('results', "#{ruby_version}.csv"), 'a') do |f|
       if failed
         fail_message = BaseConfig.timeout_applied ? 'TIMEOUT' : 'FAILED'
-        stubbed_std_err = stderr_str.gsub("\n", "#nl").gsub(";", "#sc")
-        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{fail_message};#{Time.now.to_s};#{stubbed_std_err};#{memory_total};#{times};#{stdout_str}; "
+        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{fail_message};#{Time.now.to_s};#{stderr_str};#{memory_total};#{times};#{stdout_str};#{stderr_str}"
         @runs[key] -= 1
       else
-        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{memory};#{memory_total};#{times};#{stdout_str}; "
+        f.puts "#{folder_name}/#{benchmark};#{ruby_version};#{gcc_version};#{basename};#{time};#{Time.now.to_s};#{memory};#{memory_total};#{times};#{stdout_str};#{stderr_str}"
         @runs[key] -= 1
       end
     end

@@ -52,4 +52,22 @@ COMMANDS
     timeout.stop
   end
 
+  def run_custom_benchmark image_name, folder, bench_with_args
+    timeout = BenchTimeout.new()
+
+    res = BenchUtils.run_command <<-eos
+docker run -i -v ${PWD}/results:/results -v ${PWD}/benchmarks:/benchmarks #{image_name} bash -l << COMMANDS
+cd /benchmarks && \
+cd #{folder} && \
+bash -lc "ruby -J-Djruby.compile.mode=OFF #{bench_with_args}" >/tmp/stdout 2>/tmp/stderr && \
+cat /tmp/stderr > /results/stderr && \
+cat /tmp/stdout > /results/stdout && \
+chmod 666 /results/std*
+COMMANDS
+    eos
+    res
+  ensure
+    timeout.stop
+  end
+
 end

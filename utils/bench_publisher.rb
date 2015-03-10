@@ -49,6 +49,8 @@ class BenchPublisher
     run_at = Time.parse(data[5])
     memory = data[6]
     total_memory = data[7]
+    stdout = data[9]
+    stderr = data[10]
 
     unless time == 'FAILED' || time == 'TIMEOUT'
       http = Net::HTTP.new(@uri.host, @port || @uri.port)
@@ -62,7 +64,9 @@ class BenchPublisher
                               time: time,
                               run_at: run_at,
                               memory: memory,
-                              total_memory: total_memory
+                              total_memory: total_memory,
+                              stdout: stdout,
+                              stderr: stderr
                             })
       response = http.request(request)
       @published_lines += 1

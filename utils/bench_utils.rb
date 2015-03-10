@@ -59,7 +59,7 @@ class BenchUtils
   def self.benchmark_folders
     dirs = []
     Dir.glob('benchmarks/*').select {|f| File.directory? f}.map{|i| i.slice!('benchmarks/'); dirs << i }
-
+    dirs.delete('custom') # dont automatically run benchmarks in this folder.
     dirs
   end
 
