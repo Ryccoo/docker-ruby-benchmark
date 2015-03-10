@@ -23,12 +23,12 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 RUN gem install bundler
 RUN wget -O rubinius-release-$RBX_VERSION.tar.bz2 https://s3.amazonaws.com/releases.rubini.us/rubinius-$RBX_VERSION.tar.bz2
 RUN tar -xjf rubinius-release-$RBX_VERSION.tar.bz2
+
 RUN rm rubinius-release-$RBX_VERSION.tar.bz2
-RUN cd rubinius-$RBX_VERSION && \
-    bundle install && \
-    ./configure --prefix=/opt/rubies/rubinius-$RBX_VERSION && \
-    rake build && \
-    sudo rake install
+RUN cd rubinius-$RBX_VERSION && bundle install
+RUN cd rubinius-$RBX_VERSION && ./configure --prefix=/opt/rubies/rubinius-$RBX_VERSION
+RUN cd rubinius-$RBX_VERSION && rake build
+RUN cd rubinius-$RBX_VERSION && sudo rake install
 
 ENV PATH /opt/rubies/rubinius-$RBX_VERSION/bin:$PATH
 RUN rm -rf /tmp/* /var/tmp/*
