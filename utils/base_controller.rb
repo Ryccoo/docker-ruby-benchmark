@@ -6,7 +6,7 @@ class BaseController
     puts 'Downloading images'
     BaseConfig::AVAILABLE_DOCKER_IMAGES.each do |k,gccs|
       gccs.each do |gcc_v, image_name|
-        puts 'Downloading image - ' + v
+        puts 'Downloading image - ' + image_name
         BaseConfig::DOCKER_CONTROLLER.download_docker_image image_name
       end
     end
