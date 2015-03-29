@@ -103,7 +103,7 @@ class BenchmarkController
     basename = benchmark.gsub(/\.rb.*/, '')
 
     stderr_str ||= ''
-    stderr_str = folder_name == 'custom' ? stderr_str : stderr_str[0.100]
+    stderr_str = folder_name == 'custom' ? stderr_str : stderr_str[0..100]
     stderr_str = stderr_str.gsub("\n", "\\n").gsub(";", ",")
 
     File.open(BaseConfig.path.join('results', "#{ruby_version}.csv"), 'a') do |f|

@@ -70,9 +70,9 @@ class BaseConfig
     'jruby-1.6.8' => {
       'Undefined' => 'ryccoo/jruby:1.6.8'
     },
-    'rubinius-2.5.2' => {
-      'Undefined' => 'ryccoo/rubinius:2.5.2'
-    },
+#    'rubinius-2.5.2' => {
+#      'Undefined' => 'ryccoo/rubinius:2.5.2'
+#    },
     'rubinius-2.4.1' => {
       'Undefined' => 'ryccoo/rubinius:2.4.1'
     },
