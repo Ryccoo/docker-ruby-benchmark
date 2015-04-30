@@ -4,7 +4,7 @@ class BenchTimeout
 
   def initialize(time: nil, verbose: nil)
     @verbose = verbose
-    @timeout = time || (5 * 60) # default timeout is 5 min.
+    @timeout = time || ENV['BENCH_TIMEOUT'] || (5 * 60) # default timeout is 5 min.
     puts "Starting timeout for #{@timeout} seconds!" if (@verbose || ENV['VERBOSE'])
     BaseConfig.timeout_applied = false
     @watcher = Thread.new do

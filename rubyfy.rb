@@ -64,6 +64,9 @@ class Parser
 
     BENCH_SKIP_STARTUP_TEST=true     Skip docker images test on suite start. Default value is false.
 
+    BENCH_TIMEOUT=x                  Maximum time for each run in seconds. Default value is 300.
+                                      After this time run is terminated and 'TIMEOUT' is stored in results
+
     VERBOSE=true                     Verbose mode. Default is false.
 
   \033[1mRubyFy.Me options for publishing to rails app\033[0m
@@ -74,7 +77,7 @@ class Parser
                                       Examples: \033[1mBENCH_SITE="localhost" BENCH_PORT=3000 ./rubyfy.rb --publish\033[0m
                                                 \033[1mBENCH_SITE="http://rubyfy.me" ./rubyfy.rb --publish\033[0m
 
-    BENCH_PORT=x                    Port of rails app displaying stored results.
+    BENCH_PORT=x                     Port of rails app displaying stored results.
                                       Example: \033[1mBENCH_SITE=localhost BENCH_PORT=3000 ./rubyfy.rb --publish\033[0m will
                                       push results to localhost on port 3000.
                                       IMPORTANT: USE THIS ONLY WHEN PORT IS DIFFERENT THAN 80
